@@ -143,6 +143,7 @@ function initMap() {
 	
 	
 	for (var i = 0; i < locations.length; i++) {
+		var loc = locations[i];
 		var position = locations[i].location;
 		var title = locations[i].title;
 		var type = locations[i].type;
@@ -173,11 +174,23 @@ function initMap() {
         });
 		// Two event listener - One for mouse over, one for mouse out. to change the color back and forth. 
         marker.addListener('mouseover', function() {
-        	this.setIcon(highlightedIcon);
+        	this.setIcon(this.highlightedIcon);
         });
         marker.addListener('mouseout', function() {
-        	this.setIcon(defaultIcon);
+        	this.setIcon(this.defaultIcon);
         });
+
+        // Testing Closure method
+        // marker.addListener('mouseover', (function(locCopy) {
+        // 	return function() {
+        // 	this.setIcon(highlightedIcon);
+        // 	};
+        // })(locCopy));
+        // marker.addListener('mouseout', (function(locCopy) {
+        // 	return function() {
+        // 	this.setIcon(defaultIcon);
+        // 	};
+        // })(locCopy));
 	}
 }
 
