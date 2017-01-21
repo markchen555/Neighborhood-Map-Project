@@ -72,6 +72,8 @@ var Location = function(data) {
 	var self = this;
 	self.title = data.title;
 	self.location = data.location;
+	self.type = data.type;
+	self.id = data.id;
 	self.show = ko.observable(true);
 };
 
@@ -179,10 +181,10 @@ function initMap() {
 	
 	
 	for (var i = 0; i < viewModel.filteredLocations().length; i++) {
-		var locId = locations[i].id;
-		var position = viewModel.filteredLocations().location;
-		var title = viewModel.filteredLocations().title;
-		var type = viewModel.filteredLocations().type;
+		var locId = viewModel.filteredLocations()[i].id;
+		var position = viewModel.filteredLocations()[i].location;
+		var title = viewModel.filteredLocations()[i].title;
+		var type = viewModel.filteredLocations()[i].type;
 
 		// Style the marker a bit. This will be our listing marker icon.
     	var defaultIcon = makeMarkerIcon('Before', type);
@@ -205,7 +207,7 @@ function initMap() {
 
 		// Push the marker to our marker array.
 		viewModel.filteredLocations()[i].marker = marker;
-		// markers.push(marker);
+		markers.push(marker);
 
 		// Create an onlick event to open an infowindow at each marker.
         marker.addListener('click', function() {
