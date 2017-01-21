@@ -6,56 +6,64 @@ var locations = [{
             lat: 34.070465,
             lng: -118.115601
         },
-        type: ["School"]
+        type: ["School"],
+        id: 'ChIJtwkJXk3FwoARLa3bhWCYeic'
     },{
         title: 'Half & Half Tea House',
         location: {
             lat: 34.063846,
             lng: -118.134599
         },
-        type: ["Drink"]
+        type: ["Drink"],
+        id: 'ChIJo-q-Tl3FwoARFvIg1LL0xc0'
     }, {
         title: 'Boba Ave 8090',
         location: {
             lat: 34.078642,
             lng: -118.101897
         },
-        type: ["Drink"]
+        type: ["Drink"],
+        id: 'ChIJ42uSTbfawoARo8LycmjL7D0'
     }, {
         title: 'Tea Station',
         location: {
             lat: 34.09214,
             lng: -118.132422
         },
-        type: ["Drink"]
+        type: ["Drink"],
+        id: 'ChIJzdhPCSHFwoAR2SK71bT3CnU'
     }, {
         title: 'Tea Brick',
         location: {
             lat: 34.0627834,
             lng: -118.129498
         },
-        type: ["Drink"]
+        type: ["Drink"],
+        id: 'ChIJFZxagVvFwoAR07lvkYmDlSU'
     }, {
         title: 'Factory Tea Bar',
         location: {
             lat: 34.097658,
             lng: -118.109007
         },
-        type: ["Drink"]
+        type: ["Drink"],
+        id: 'ChIJ5zgvXtTawoARdjtqffb8osE'
     }, {
         title: 'Le Arbre Tea House',
         location: {
             lat: 34.080447,
             lng: -118.083796
         },
-        type: ["Drink"]
+        type: ["Drink"],
+        id: 'ChIJhTc3LpfawoARgSSEUaFwlEc'
     }, {
         title: 'Honeyboba',
         location: {
             lat: 34.0495,
             lng: -118.082349
         },
-        type: ["Drink"]
+        type: ["Drink"],
+        id: 'ChIJM8dremnQwoARtzJ8GQTLG_Q'
     }];
 
 // Model 
@@ -144,6 +152,7 @@ function initMap() {
 	
 	for (var i = 0; i < locations.length; i++) {
 		var loc = locations[i];
+		var locId = locations[i].id;
 		var position = locations[i].location;
 		var title = locations[i].title;
 		var type = locations[i].type;
@@ -162,7 +171,9 @@ function initMap() {
 			title: title,
 			animation: google.maps.Animation.DROP,
 			icon: defaultIcon,
-			id: i
+			highlightedIcon: highlightedIcon,
+			defaultIcon: defaultIcon,
+			id: locId
 		});
 
 		// Push the marker to our marker array.
@@ -170,6 +181,12 @@ function initMap() {
 
 		// Create an onlick event to open an infowindow at each marker.
         marker.addListener('click', function() {
+        	console.log(this);
+        	var self = this;
+        	self.setAnimation(google.maps.Animation.BOUNCE);
+        	setTimeout(function() {
+        		self.setAnimation(null);
+        	}, 1400);
         	populateInfoWindow(this, largeInfowindow);
         });
 		// Two event listener - One for mouse over, one for mouse out. to change the color back and forth. 
@@ -179,18 +196,6 @@ function initMap() {
         marker.addListener('mouseout', function() {
         	this.setIcon(this.defaultIcon);
         });
-
-        // Testing Closure method
-        // marker.addListener('mouseover', (function(locCopy) {
-        // 	return function() {
-        // 	this.setIcon(highlightedIcon);
-        // 	};
-        // })(locCopy));
-        // marker.addListener('mouseout', (function(locCopy) {
-        // 	return function() {
-        // 	this.setIcon(defaultIcon);
-        // 	};
-        // })(locCopy));
 	}
 }
 
