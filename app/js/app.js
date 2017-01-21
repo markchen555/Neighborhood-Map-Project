@@ -72,14 +72,42 @@ var Location = function(data) {
 	var self = this;
 	self.title = data.title;
 	self.location = data.location;
+	self.show = ko.observable(true);
 };
 
 // View Model
 
 var ViewModel = function() {
 	var self = this;
+	self.locs = ko.observableArray(locations);
+	self.query = ko.observable('');
+	self.filteredLocations = ko.observableArray();
 
+	for (var i = 0 ; i < locations.length; i++) {
+		var loc = new Location(locations[i]);
+		self.filteredLocations.push(loc);
+	}
 
+	self.filterFunctions = ko.computed(function() {
+		var value = self.query();
+		for (var i = 0; i < self.filteredLocations().length; i++) {
+			if (self.filteredLocations()[i].title.toLowerCase().indexOf(value) >= 0) {
+				self.filteredLocations()[i].show(true);
+				if (self.filteredLocations()[i].marker) {
+					self.filteredLocations()[i].marker.setVisible(true);
+				}
+			} else {
+				self.filteredLocations()[i].show(false);
+				if (self.filteredLocations()[i].marker) {
+					self.filteredLocations()[i].marker.setVisible(false);
+				}
+			}
+		}
+	});
+
+	self.showInfo = function(locations) {
+		google.maps.event.trigger(locations.marker, 'click');
+	};
 };
 
 var map;
@@ -150,12 +178,11 @@ function initMap() {
 	var largeInfowindow = new google.maps.InfoWindow();
 	
 	
-	for (var i = 0; i < locations.length; i++) {
-		var loc = locations[i];
+	for (var i = 0; i < viewModel.filteredLocations().length; i++) {
 		var locId = locations[i].id;
-		var position = locations[i].location;
-		var title = locations[i].title;
-		var type = locations[i].type;
+		var position = viewModel.filteredLocations().location;
+		var title = viewModel.filteredLocations().title;
+		var type = viewModel.filteredLocations().type;
 
 		// Style the marker a bit. This will be our listing marker icon.
     	var defaultIcon = makeMarkerIcon('Before', type);
@@ -177,7 +204,8 @@ function initMap() {
 		});
 
 		// Push the marker to our marker array.
-		markers.push(marker);
+		viewModel.filteredLocations()[i].marker = marker;
+		// markers.push(marker);
 
 		// Create an onlick event to open an infowindow at each marker.
         marker.addListener('click', function() {
@@ -212,16 +240,7 @@ function makeMarkerIcon(beforeAfter, type) {
 
 // This is the function populates the infowindow when the marker is clicked. We'll only allow one infowindow which will open at the marker that is clicked, and populate based on that marker position.
 function populateInfoWindow(marker, infowindow) {
-	// Check to make sure the infowindow is not already opened on this marker
-	// if (infowindow.marker != marker) {
-	// 	infowindow.marker = marker;
-	// 	infowindow.setContent('<div>' + marker.title + '</div>');
-	// 	infowindow.open(map, marker);
-	// 	// Make sure the marker property is cleared if the infowindow is closed.
-	// 	infowindow.addListener('closeclick', function() {
-	// 		infowindow.marker = null;
- // 		});
-	// }
+	// Check to make sure the infowindow is not already opened on this and status is ok.
 	var service = new google.maps.places.PlacesService(map);
         service.getDetails({
           placeId: marker.id
@@ -229,19 +248,22 @@ function populateInfoWindow(marker, infowindow) {
         	console.log(place);
         	console.log(status);
 
-          if (infowindow.marker != marker) {
+          if (infowindow.marker != marker, status == google.maps.StreetViewStatus.OK) {
             // Set the marker property on this infowindow so it isn't created again. 
             infowindow.marker = marker;
             // infowindow.setContent('<div>' + marker.title + '</div>');
             var innerHTML = '<div>';
             if (marker.title) {
-              innerHTML += '<stong>' + marker.title + '</strong>'; 
+              innerHTML += '<strong>' + marker.title + '</strong>'; 
             }
             if (place.formatted_address) {
               innerHTML += '<br>' + place.formatted_address;
             }
             if (place.formatted_phone_number) {
               innerHTML += '<br>' + place.formatted_phone_number;
+            }
+            if (place.rating) {
+              innerHTML += '<br>' +'Rating: '+ place.rating;
             }
             if (place.opening_hours) {
               innerHTML += '<br><br><strong>Hours:</strong><br>' + place.opening_hours.weekday_text[0] + '<br>' + place.opening_hours.weekday_text[1] + '<br>' + place.opening_hours.weekday_text[2] + '<br>' + place.opening_hours.weekday_text[3] + '<br>' + place.opening_hours.weekday_text[4] + '<br>' + place.opening_hours.weekday_text[5] + '<br>' + place.opening_hours.weekday_text[6];
@@ -260,4 +282,7 @@ function populateInfoWindow(marker, infowindow) {
           }
         });
 }
+
+var viewModel = new ViewModel();
+ko.applyBindings(viewModel);
 

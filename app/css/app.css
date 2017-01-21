@@ -4,6 +4,11 @@ html, body {
     padding: 0;
 }
 
+h2 {
+    text-align: center;
+    text-shadow: 0.5px 0.5px 2px #eaeaea;
+}
+
 .container {
     height: 100%;
     position: absolute;
@@ -11,7 +16,7 @@ html, body {
 .option-box {
       background: #fff;
       border: 1px solid #999;
-      border-radius: 3px;
+      border-radius: 5px;
       height: 100%;
       line-height: 35px;
       padding: 10px 10px 30px 10px;
@@ -22,8 +27,8 @@ html, body {
 
 #search-div {
     background-color: #777;
-    padding-right: 1%;
-    padding-left: 1%; 
+    padding-right: 2%;
+    padding-left: 2%; 
 }
 
 #search-div .glyphicon-search {
@@ -34,7 +39,7 @@ html, body {
     padding: 20px;
     position: absolute;
     text-shadow: 0.5px 0.5px 2px gray;
-    top: 21px;
+    top: 84px;
     z-index: 2; 
 }
 
