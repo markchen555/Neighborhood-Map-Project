@@ -23,7 +23,7 @@ var locations = [{
             lng: -118.101897
         },
         type: ["Drink"],
-        id: 'ChIJ42uSTbfawoARo8LycmjL7D0'
+        id: 'ChIJ42uSTbfawoARo8LycmjL7DE'
     }, {
         title: 'Tea Station',
         location: {
@@ -226,25 +226,27 @@ function populateInfoWindow(marker, infowindow) {
         service.getDetails({
           placeId: marker.id
         }, function(place, status) {
+        	console.log(place);
+        	console.log(status);
 
           if (infowindow.marker != marker) {
             // Set the marker property on this infowindow so it isn't created again. 
             infowindow.marker = marker;
-            infowindow.setContent('<div>' + marker.title + '</div>');
+            // infowindow.setContent('<div>' + marker.title + '</div>');
             var innerHTML = '<div>';
             if (marker.title) {
               innerHTML += '<stong>' + marker.title + '</strong>'; 
             }
-            if (marker.formatted_address) {
+            if (place.formatted_address) {
               innerHTML += '<br>' + place.formatted_address;
             }
-            if (marker.formatted_phone_number) {
+            if (place.formatted_phone_number) {
               innerHTML += '<br>' + place.formatted_phone_number;
             }
-            if (marker.opening_hours) {
+            if (place.opening_hours) {
               innerHTML += '<br><br><strong>Hours:</strong><br>' + place.opening_hours.weekday_text[0] + '<br>' + place.opening_hours.weekday_text[1] + '<br>' + place.opening_hours.weekday_text[2] + '<br>' + place.opening_hours.weekday_text[3] + '<br>' + place.opening_hours.weekday_text[4] + '<br>' + place.opening_hours.weekday_text[5] + '<br>' + place.opening_hours.weekday_text[6];
             }
-            if (marker.photos) {
+            if (place.photos) {
               innerHTML += '<br><br><img src="' + place.photos[0].getUrl(
               {maxHeight: 100, maxWidth: 200}) + '">';
             }
