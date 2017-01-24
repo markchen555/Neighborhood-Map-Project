@@ -2,6 +2,13 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
+    
+}
+
+body {
+    font-family: "Lato", sans-serif;
+    font-weight: 300;
+    padding-top: 0;
 }
 
 h2 {
@@ -9,10 +16,15 @@ h2 {
     text-shadow: 0.5px 0.5px 2px #eaeaea;
 }
 
+.infowindow {
+    text-align: center;
+}
+
 .container {
     height: 100%;
     position: absolute;
 }
+
 .option-box {
       background: #fff;
       border: 1px solid #999;

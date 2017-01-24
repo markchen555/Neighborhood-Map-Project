@@ -7,7 +7,8 @@ var locations = [{
             lng: -118.115601
         },
         type: ["School"],
-        id: 'ChIJtwkJXk3FwoARLa3bhWCYeic'
+        id: 'ChIJtwkJXk3FwoARLa3bhWCYeic',
+        bizId: 'mark-keppel-high-school-alhambra'
     },{
         title: 'Half & Half Tea House',
         location: {
@@ -15,7 +16,8 @@ var locations = [{
             lng: -118.134599
         },
         type: ["Drink"],
-        id: 'ChIJo-q-Tl3FwoARFvIg1LL0xc0'
+        id: 'ChIJo-q-Tl3FwoARFvIg1LL0xc0',
+        bizId: 'half-and-half-tea-express-monterey-park-monterey-park'
     }, {
         title: 'Boba Ave 8090',
         location: {
@@ -23,7 +25,8 @@ var locations = [{
             lng: -118.101897
         },
         type: ["Drink"],
-        id: 'ChIJ42uSTbfawoARo8LycmjL7DE'
+        id: 'ChIJ42uSTbfawoARo8LycmjL7DE',
+        bizId: 'boba-ave-8090-san-gabriel-2'
     }, {
         title: 'Tea Station',
         location: {
@@ -31,7 +34,8 @@ var locations = [{
             lng: -118.132422
         },
         type: ["Drink"],
-        id: 'ChIJzdhPCSHFwoAR2SK71bT3CnU'
+        id: 'ChIJzdhPCSHFwoAR2SK71bT3CnU',
+        bizId: 'tea-station-alhambra'
     }, {
         title: 'Tea Brick',
         location: {
@@ -39,7 +43,8 @@ var locations = [{
             lng: -118.129498
         },
         type: ["Drink"],
-        id: 'ChIJFZxagVvFwoAR07lvkYmDlSU'
+        id: 'ChIJFZxagVvFwoAR07lvkYmDlSU',
+        bizId: 'tea-brick-monterey-park'
     }, {
         title: 'Factory Tea Bar',
         location: {
@@ -47,7 +52,8 @@ var locations = [{
             lng: -118.109007
         },
         type: ["Drink"],
-        id: 'ChIJ5zgvXtTawoARdjtqffb8osE'
+        id: 'ChIJ5zgvXtTawoARdjtqffb8osE',
+        bizId: 'factory-tea-bar-san-gabriel'
     }, {
         title: 'Le Arbre Tea House',
         location: {
@@ -55,7 +61,8 @@ var locations = [{
             lng: -118.083796
         },
         type: ["Drink"],
-        id: 'ChIJhTc3LpfawoARgSSEUaFwlEc'
+        id: 'ChIJhTc3LpfawoARgSSEUaFwlEc',
+        bizId: 'le-arbre-tea-house-rosemead-2'
     }, {
         title: 'Honeyboba',
         location: {
@@ -63,7 +70,8 @@ var locations = [{
             lng: -118.082349
         },
         type: ["Drink"],
-        id: 'ChIJM8dremnQwoARtzJ8GQTLG_Q'
+        id: 'ChIJM8dremnQwoARtzJ8GQTLG_Q',
+        bizId: 'honeyboba-los-angeles'
     }];
 
 // Model 
@@ -74,6 +82,7 @@ var Location = function(data) {
 	self.location = data.location;
 	self.type = data.type;
 	self.id = data.id;
+	self.bizId = data.bizId;
 	self.show = ko.observable(true);
 };
 
@@ -84,6 +93,7 @@ var ViewModel = function() {
 	self.locs = ko.observableArray(locations);
 	self.query = ko.observable('');
 	self.filteredLocations = ko.observableArray();
+	self.mapErrorMessage = ko.observable(false);
 
 	for (var i = 0 ; i < locations.length; i++) {
 		var loc = new Location(locations[i]);
@@ -182,6 +192,7 @@ function initMap() {
 	
 	for (var i = 0; i < viewModel.filteredLocations().length; i++) {
 		var locId = viewModel.filteredLocations()[i].id;
+		var bizId = viewModel.filteredLocations()[i].bizId;
 		var position = viewModel.filteredLocations()[i].location;
 		var title = viewModel.filteredLocations()[i].title;
 		var type = viewModel.filteredLocations()[i].type;
@@ -202,7 +213,8 @@ function initMap() {
 			icon: defaultIcon,
 			highlightedIcon: highlightedIcon,
 			defaultIcon: defaultIcon,
-			id: locId
+			id: locId,
+			bizId: bizId
 		});
 
 		// Push the marker to our marker array.
@@ -241,6 +253,11 @@ function makeMarkerIcon(beforeAfter, type) {
 }
 
 // This is the function populates the infowindow when the marker is clicked. We'll only allow one infowindow which will open at the marker that is clicked, and populate based on that marker position.
+// Yelp API 2.0: 
+//Consumer Key: hXgPJ8oeGx5cLCp54G-7RQ
+//Consumer Secret: m3n1T9WThmp53i7I4M-jW6pqDvA
+//Token: zTWQp_ENU6OZwUm4GaDGNi70wTPGtUpj 
+//Token Secret: QWBZJjSM14BwaW-CHmHQjcNHBNk
 function populateInfoWindow(marker, infowindow) {
 	// Check to make sure the infowindow is not already opened on this and status is ok.
 	var service = new google.maps.places.PlacesService(map);
@@ -249,12 +266,56 @@ function populateInfoWindow(marker, infowindow) {
         }, function(place, status) {
         	console.log(place);
         	console.log(status);
+        	console.log(marker.bizId);
 
           if (infowindow.marker != marker, status == google.maps.StreetViewStatus.OK) {
             // Set the marker property on this infowindow so it isn't created again. 
             infowindow.marker = marker;
             // infowindow.setContent('<div>' + marker.title + '</div>');
-            var innerHTML = '<div>';
+            var innerHTML = '<div class="infowindow">';
+
+
+            // Yelp API oauth implementation
+            function nonce_generate() {
+  				return (Math.floor(Math.random() * 1e12).toString());
+			}
+
+			var yelp_url = 'https://api.yelp.com/v2/' + 'business/' + marker.bizId;
+
+			var parameters = {
+      			oauth_consumer_key: "hXgPJ8oeGx5cLCp54G-7RQ",
+      			oauth_token: "zTWQp_ENU6OZwUm4GaDGNi70wTPGtUpj",
+      			// oauth_consumer_secret: "m3n1T9WThmp53i7I4M-jW6pqDvA",
+      			// oauth_token_secret: "QWBZJjSM14BwaW-CHmHQjcNHBNk",
+      			oauth_nonce: nonce_generate(),
+      			oauth_timestamp: Math.floor(Date.now()/1000),
+      			oauth_signature_method: 'HMAC-SHA1',
+      			oauth_version : '1.0',
+      			callback: 'cb'              // This is crucial to include for jsonp implementation in AJAX or else the oauth-signature will be wrong.
+    		};
+
+    		var encodedSignature = oauthSignature.generate('GET',yelp_url, parameters, "m3n1T9WThmp53i7I4M-jW6pqDvA", "QWBZJjSM14BwaW-CHmHQjcNHBNk");
+    			parameters.oauth_signature = encodedSignature;
+
+    		var settings = {
+    			url: yelp_url,
+    			data: parameters,
+    			cache: true,  // This is crucial to include for jsonp implementation in AJAX or else the oauth-signature will be wrong.
+    			dataType: 'jsonp',
+    			success: function(result) {
+    				console.log(result);
+    				console.log(result.rating_img_url)
+    				if (result.rating_img_url) {
+    					innerHTML += '<br><br><img src="' + result.rating_img_url + '">';
+    				}
+    			},
+    			error: function () {
+    				console.log("failed");
+    			}
+    		};
+    		// Yelp ajax request
+    		$.ajax(settings);
+
             if (marker.title) {
               innerHTML += '<strong>' + marker.title + '</strong>'; 
             }
@@ -263,9 +324,6 @@ function populateInfoWindow(marker, infowindow) {
             }
             if (place.formatted_phone_number) {
               innerHTML += '<br>' + place.formatted_phone_number;
-            }
-            if (place.rating) {
-              innerHTML += '<br>' +'Rating: '+ place.rating;
             }
             if (place.opening_hours) {
               innerHTML += '<br><br><strong>Hours:</strong><br>' + place.opening_hours.weekday_text[0] + '<br>' + place.opening_hours.weekday_text[1] + '<br>' + place.opening_hours.weekday_text[2] + '<br>' + place.opening_hours.weekday_text[3] + '<br>' + place.opening_hours.weekday_text[4] + '<br>' + place.opening_hours.weekday_text[5] + '<br>' + place.opening_hours.weekday_text[6];
@@ -287,4 +345,8 @@ function populateInfoWindow(marker, infowindow) {
 
 var viewModel = new ViewModel();
 ko.applyBindings(viewModel);
+
+function googleError() {
+    viewModel.mapErrorMessage(true);
+}
 
