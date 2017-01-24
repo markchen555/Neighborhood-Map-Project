@@ -306,7 +306,13 @@ function populateInfoWindow(marker, infowindow) {
     				console.log(result);
     				console.log(result.rating_img_url)
     				if (result.rating_img_url) {
-    					innerHTML += '<br><br><img src="' + result.rating_img_url + '">';
+    					infowindow.marker = marker;
+    					infowindow.setContent ('<div class="yelp"><img src="' + result.rating_img_url + '"></div>' + innerHTML);
+    					infowindow.open(map, marker);
+    					infowindow.addListener('closeclick', function() {
+              				infowindow.marker = null;
+            			});
+
     				}
     			},
     			error: function () {
@@ -315,6 +321,8 @@ function populateInfoWindow(marker, infowindow) {
     		};
     		// Yelp ajax request
     		$.ajax(settings);
+
+
 
             if (marker.title) {
               innerHTML += '<strong>' + marker.title + '</strong>'; 
@@ -333,14 +341,18 @@ function populateInfoWindow(marker, infowindow) {
               {maxHeight: 100, maxWidth: 200}) + '">';
             }
             innerHTML += '</div>';
-            infowindow.setContent(innerHTML);
-            infowindow.open(map, marker);
+            // infowindow.setContent(innerHTML);
+            // infowindow.open(map, marker);
             // Make sure the marker property is cleared if the infowindow is closed.
-            infowindow.addListener('closeclick', function() {
-              infowindow.marker = null;
-            });
+            // infowindow.addListener('closeclick', function() {
+            //   infowindow.marker = null;
+            // });
           }
         });
+}
+
+function yelp() {
+
 }
 
 var viewModel = new ViewModel();
