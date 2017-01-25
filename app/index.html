@@ -20,7 +20,7 @@
         	</a>
 		</header> -->
 		<div class="container">
-			<div id="search-div" class="option-box">
+			<div id="search-div" class="aside">
 				<p> Tea Around School </p>
         		<span class="glyphicon glyphicon-search"></span>
         		<input class="search-field" id="searchbox" type="text" placeholder="What are you searching for?" data-bind="textInput: query">  
@@ -41,7 +41,7 @@
             	<hr>      		
     		</div>
     	</div>
-		<div id="map"></div>
+		<div id="map" class="main"></div>
 	<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
     <script>
       WebFont.load({
@@ -50,11 +50,11 @@
         }
       });
     </script>
-	<script type="text/javascript" src="lib/knockout-3.4.0.js"></script>
-    <script type="text/javascript" src="lib/jquery-2.2.3.min.js"></script>
+	<script src="lib/knockout-3.4.0.js"></script>
+    <script src="lib/jquery-2.2.3.min.js"></script>
     <script async defer src="js/oauth-signature.js"></script>
-    <script type="text/javascript" src="js/app.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,drawing,geometry&key=AIzaSyB9U4wGEELmUkhEqsgG8XWRcziBnQgPu7g&v=3&callback=initMap">
+    <script src="js/app.js"></script>
+    <script async defer onerror="mapError()" src="https://maps.googleapis.com/maps/api/js?libraries=places,drawing,geometry&key=AIzaSyB9U4wGEELmUkhEqsgG8XWRcziBnQgPu7g&v=3&callback=initMap">
    	</script>
 	</body>
 </html>

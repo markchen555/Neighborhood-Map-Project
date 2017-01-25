@@ -63,7 +63,7 @@ p {
     text-align: center;
 }
 
-.option-box {
+.aside {
       background: #fff;
       border: 1px solid #999;
       border-radius: 5px;
@@ -75,13 +75,13 @@ p {
      }
 
 @media screen and (max-width: 768px) {
-    .option-box {
+    .aside {
         width: 260px;
     } 
 }
 
 @media screen and (max-width: 413px) {
-    .option-box {
+    .aside {
         width: 140px;
     } 
 }

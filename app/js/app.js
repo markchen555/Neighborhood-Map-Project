@@ -224,7 +224,6 @@ function initMap() {
 
 		// Create an onlick event to open an infowindow at each marker.
         marker.addListener('click', function() {
-        	console.log(this);
         	var self = this;
         	self.setAnimation(google.maps.Animation.BOUNCE);
         	setTimeout(function() {
@@ -304,10 +303,10 @@ function populateInfoWindow(marker, infowindow) {
     			cache: true,  // This is crucial to include for jsonp implementation in AJAX or else the oauth-signature will be wrong.
     			dataType: 'jsonp',
     			success: function(result) {
-    				console.log(result);
-    				console.log(result.rating_img_url)
     				if (result.rating_img_url) {
     					infowindow.marker = marker;
+    					var rating_img_url;
+    					result.rating_img_url ? rating_img_url = result.rating_img_url : rating_img_url = "No Rating Image Available";
     					infowindow.setContent ('<div class="yelp"><img src="' + result.rating_img_url + '"></div>' + innerHTML);
     					infowindow.open(map, marker);
     					// Make sure the marker property is cleared if the infowindow is closed.
@@ -351,4 +350,8 @@ ko.applyBindings(viewModel);
 
 function googleError() {
     viewModel.mapErrorMessage(true);
-}
+};
+
+function mapError() {
+  alert('Script Error: See Browser Console for Detail');
+};
