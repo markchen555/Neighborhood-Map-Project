@@ -94,6 +94,7 @@ var ViewModel = function() {
 	self.query = ko.observable('');
 	self.filteredLocations = ko.observableArray();
 	self.mapErrorMessage = ko.observable(false);
+	self.apiErrorMessage = ko.observable(false);
 
 	for (var i = 0 ; i < locations.length; i++) {
 		var loc = new Location(locations[i]);
@@ -309,32 +310,26 @@ function populateInfoWindow(marker, infowindow) {
     					infowindow.marker = marker;
     					infowindow.setContent ('<div class="yelp"><img src="' + result.rating_img_url + '"></div>' + innerHTML);
     					infowindow.open(map, marker);
+    					// Make sure the marker property is cleared if the infowindow is closed.
     					infowindow.addListener('closeclick', function() {
               				infowindow.marker = null;
             			});
-
     				}
     			},
     			error: function () {
-    				console.log("failed");
+    				console.log("Yelp API can not work properly!");
+    				viewModel.apiErrorMessage(true);
     			}
     		};
     		// Yelp ajax request
     		$.ajax(settings);
 
+            innerHTML += '<strong>' + marker.title + '</strong>'; 
 
+            innerHTML += '<br>' + place.formatted_address;
 
-            if (marker.title) {
-              innerHTML += '<strong>' + marker.title + '</strong>'; 
-            }
-            if (place.formatted_address) {
-              innerHTML += '<br>' + place.formatted_address;
-            }
             if (place.formatted_phone_number) {
               innerHTML += '<br>' + place.formatted_phone_number;
-            }
-            if (place.opening_hours) {
-              innerHTML += '<br><br><strong>Hours:</strong><br>' + place.opening_hours.weekday_text[0] + '<br>' + place.opening_hours.weekday_text[1] + '<br>' + place.opening_hours.weekday_text[2] + '<br>' + place.opening_hours.weekday_text[3] + '<br>' + place.opening_hours.weekday_text[4] + '<br>' + place.opening_hours.weekday_text[5] + '<br>' + place.opening_hours.weekday_text[6];
             }
             if (place.photos) {
               innerHTML += '<br><br><img src="' + place.photos[0].getUrl(
@@ -351,14 +346,9 @@ function populateInfoWindow(marker, infowindow) {
         });
 }
 
-function yelp() {
-
-}
-
 var viewModel = new ViewModel();
 ko.applyBindings(viewModel);
 
 function googleError() {
     viewModel.mapErrorMessage(true);
 }
-

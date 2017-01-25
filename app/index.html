@@ -22,6 +22,10 @@
           			<h5>Google Map is currently not loading. Please try again later.</h5>
           			<hr>
         		</div>
+        		<div class ="error" data-bind="visible: apiErrorMessage">
+          			<h5>Yelp data is currently not available. Please try again later.</h5>
+          			<hr>
+        		</div>
         		<div class="list_container">
             		<ul data-bind="foreach: filteredLocations">
              		 <li class="list_element location" data-bind="text: title, click: $parent.showInfo, visible: show"></li>
