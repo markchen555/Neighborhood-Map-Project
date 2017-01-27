@@ -44,4 +44,4 @@ In this project you will develop a single-page application featuring a map of yo
 
 ### License
 
-The project is licensed under the [MYC license](license.txt).
+The project is licensed under the [MIT license](license.txt).
