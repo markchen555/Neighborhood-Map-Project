@@ -350,8 +350,8 @@ ko.applyBindings(viewModel);
 
 function googleError() {
     viewModel.mapErrorMessage(true);
-};
+}
 
 function mapError() {
   alert('Script Error: See Browser Console for Detail');
-};
+}
