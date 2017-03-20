@@ -8,21 +8,21 @@ gulp.task('views', function() { // Task to run "views" methods
   	gulp.src('app/*.html') // File(s) source
   		.pipe(plumber())
     	.pipe(htmlmin({collapseWhitespace: true}))
-    	.pipe(gulp.dest('public')) // File(s) destination
+    	.pipe(gulp.dest('./')) // File(s) destination
 });
 
 gulp.task('styles', function() { // Task to run "styles" methods
   	gulp.src(['app/css/*.css']) // File(s) source
   		.pipe(plumber())
     	.pipe(minifyCss({compatibility: 'ie8'}))
-    	.pipe(gulp.dest('public/css')) // File(s) destination
+    	.pipe(gulp.dest('./css')) // File(s) destination
 });
 
 gulp.task('scripts', function() { // Task to run "scripts" methods
 	gulp.src('app/js/*.js') // File(s) source
 		.pipe(plumber())
 		.pipe(uglify())
-		.pipe(gulp.dest('public/js')) // File(s) destination
+		.pipe(gulp.dest('./js')) // File(s) destination
 });
 
 gulp.task('watch', function() {
