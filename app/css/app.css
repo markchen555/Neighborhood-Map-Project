@@ -13,7 +13,7 @@ body {
 
 p {
     text-align: center;
-    text-shadow: 0.5px 0.5px 2px #eaeaea;
+    text-shadow: 1.5px 1.5px 8px #231f20;
     font-size: 32px;
     font-weight: 600;
     padding: 8px 0px 8px 0px;
@@ -22,7 +22,7 @@ p {
 @media screen and (max-width: 768px) {
     p {
         text-align: center;
-        text-shadow: 0.5px 0.5px 2px #eaeaea;
+        text-shadow: 1.5px 1.5px 8px #231f20;
         font-size: 25px;
         font-weight: 600;
         padding: 8px 0px 8px 0px;
@@ -31,7 +31,7 @@ p {
 @media screen and (max-width: 413px) {
     p {
         text-align: center;
-        text-shadow: 0.3px 0.3px 1px #eaeaea;
+        text-shadow: 1.3px 1.3px 7px #231f20;
         font-size: 14px;
         font-weight: 600;
         padding: 1px 0px 1px 0px;
@@ -42,6 +42,10 @@ p {
   display: none;
 }
 */
+.aside {
+    color: #fff;
+}
+
 .infowindow {
     text-align: center;
 }
