@@ -8,6 +8,7 @@
   		<meta name="author" content="Mark Chen">
 		<meta http-equiv="Catch-control" content="public">
 		<title>Neighborhood Map Project</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,300" rel="stylesheet">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<link href="css/app.css" rel="stylesheet">
 	</head>
@@ -42,6 +43,21 @@
     		</div>
     	</div>
 		<div id="map" class="main"></div>
+    <!-- Pop up content start-->
+
+        <div id="modal">
+            <div class="modalconent">
+                <h2>About The Project</h2>
+                <br>
+                <p>I developed a single-page application featuring a map for tea around my school. I then add additional search function and Yelp rating API to my application, including: designed map markers to identify popular tea place around my school, a search function to easily discover these locations, and a listview to support simple browsing of all locations.
+                </p>
+                <br>
+                <button id="exit">Close</button>
+            </div>
+        </div>
+
+        <!-- Pop up content close-->
+
 	<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
     <script>
       WebFont.load({
@@ -49,6 +65,13 @@
           families: ['Lato: 100,300']
         }
       });
+    </script>
+    <script>
+        window.onload = function () {
+            document.getElementById('exit').onclick = function () {
+                document.getElementById('modal').style.display = "none"
+            };
+        };
     </script>
 	<script src="lib/knockout-3.4.0.js"></script>
     <script src="lib/jquery-2.2.3.min.js"></script>
